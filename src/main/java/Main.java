@@ -23,6 +23,8 @@ public class Main {
         questions.add("int var = 0;");
         questions.add("String var = \"hello\";");
         questions.add("boolean switch = false;");
+        questions.add("List myList = new ArrayList();");
+        questions.add("public class Main{}");
         int currentQuestion = 0;
 
         final TileGrid tileGrid = SwingApplications.startTileGrid(
@@ -37,7 +39,7 @@ public class Main {
                         // panels can be wrapped in a box
                         box(BoxType.SINGLE, "Panel"),
                         shadow()) // shadow can be added
-                .withSize(32, 16) // the size must be smaller than the parent's size
+                .withSize(54, 16) // the size must be smaller than the parent's size
                 .withPosition(1, 1)
                 .build(); // position is always relative to the parent
 
@@ -76,7 +78,7 @@ public class Main {
                 .build();
         final Label label = Components.label()
                 .withText(questions.get(0))
-                .withSize(25,1)
+                .withSize(30,1)
                 .withPosition(30,0)
                 .build();
 
@@ -107,7 +109,17 @@ public class Main {
             else if(textInput.getText().equals(questions.get(2))){
                 System.out.println("correct");
                 panel.setTheme(ColorThemes.afterglow());
-                label.setText("YOU WIN!!!!");
+                label.setText(questions.get(3));
+            }
+            else if(textInput.getText().equals(questions.get(3))){
+                System.out.println("correct");
+                panel.setTheme(ColorThemes.amigaOs());
+                label.setText(questions.get(4));
+            }
+            else if(textInput.getText().equals(questions.get(4))){
+                System.out.println("correct");
+                panel.setTheme(ColorThemes.forest());
+                label.setText("YOU WIN!!");
             }
             return UIEventResponse.processed();
         });
