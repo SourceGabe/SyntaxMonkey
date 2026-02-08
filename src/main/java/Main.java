@@ -2,33 +2,104 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.hexworks.zircon.api.CP437TilesetResources;
-import org.hexworks.zircon.api.SwingApplications;
+import org.hexworks.zircon.api.*;
 import org.hexworks.zircon.api.application.AppConfig;
 import org.hexworks.zircon.api.application.Application;
 import org.hexworks.zircon.api.color.ANSITileColor;
+import org.hexworks.zircon.api.component.*;
 import org.hexworks.zircon.api.data.Position;
 import org.hexworks.zircon.api.data.Tile;
+import org.hexworks.zircon.api.graphics.BoxType;
+import org.hexworks.zircon.api.graphics.TileGraphics;
 import org.hexworks.zircon.api.grid.TileGrid;
+import org.hexworks.zircon.api.screen.Screen;
+import org.hexworks.zircon.api.uievent.ComponentEventType;
+import org.hexworks.zircon.api.uievent.UIEventResponse;
+
+import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
+import static org.hexworks.zircon.api.ComponentDecorations.box;
+import static org.hexworks.zircon.api.ComponentDecorations.shadow;
 
 public class Main {
     public static void main(String[] args) {
 
-        //Application application = SwingApplications.startApplication();
-        TileGrid tileGrid = SwingApplications.startTileGrid();
+        final TileGrid tileGrid = SwingApplications.startTileGrid(
+                AppConfig.newBuilder()
+                        .withSize(34, 18)
+                        .withDefaultTileset(CP437TilesetResources.aduDhabi16x16())
+                        .build());
+        final Screen screen = Screen.create(tileGrid);
 
-        AppConfig.newBuilder()
-                .withSize(100, 50)
-                .withDefaultTileset(CP437TilesetResources.rexPaint16x16())
+        Panel panel = Components.panel()
+                .withDecorations(
+                        // panels can be wrapped in a box
+                        box(BoxType.SINGLE, "Panel"),
+                        shadow()) // shadow can be added
+                .withSize(32, 16) // the size must be smaller than the parent's size
+                .withPosition(1, 1)
+                .build(); // position is always relative to the parent
+
+        final Header header = Components.header()
+                // this will be 1x1 left and down from the top left
+                // corner of the panel
+                .withPosition(1, 1)
+                .withText("SyntaxMonkey")
                 .build();
 
-        tileGrid.draw(
+        final TextArea textInput = Components.textArea()
+                // this will be 1x1 left and down from the top left
+                // corner of the panel
+                .withSize(25,1)
+                .withPosition(0, 0)
+                .build();
+
+        final CheckBox checkBox = Components.checkBox()
+                .withText("Check me!")
+                .withPosition(Position.create(0, 0)
+                        // the position class has some convenience methods
+                        // for you to specify your component's position as
+                        // relative to another one
+                        .relativeToBottomOf(header))
+                .build();
+
+        final Button start = Components.button()
+                .withPosition(Position.create(0, 0) // this means 1 row below the check box
+                        .relativeToBottomOf(checkBox))
+                .withText("start")
+                .build();
+
+
+
+        panel.addComponent(header);
+        panel.addComponent(start);
+        //panel.addComponent(textInput);
+
+
+        start.handleComponentEvents(ComponentEventType.ACTIVATED, (event) -> {
+            panel.setTheme(ColorThemes.capturedByPirates());
+            screen.addComponent(textInput);
+            return UIEventResponse.processed();
+        });
+
+        screen.addComponent(panel);
+
+// we can apply color themes to a screen
+        screen.setTheme(ColorThemes.monokaiBlue());
+
+// this is how you can define interactions with a component
+
+
+// in order to see the changes you need to display your screen.
+        screen.display();
+
+
+       /* tileGrid.draw(
                 Tile.newBuilder()
                         .withBackgroundColor(ANSITileColor.CYAN)
                         .withForegroundColor(ANSITileColor.WHITE)
                         .withCharacter('x')
                         .build(),
-                Position.create(25, 0));
+                Position.create(25, 0));*/
 
 
 /*
