@@ -1,3 +1,5 @@
+## About
+Do you know typing tests like MonkeyType? Do you struggle with memorizing coding syntax? This program will help you get better at coding syntax with this short game.
 ## Inspiration
 The inspiration for this project was typing games and websites like MonkeyType.
 
