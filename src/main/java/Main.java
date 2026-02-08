@@ -1,22 +1,17 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.hexworks.zircon.api.*;
 import org.hexworks.zircon.api.application.AppConfig;
-import org.hexworks.zircon.api.application.Application;
-import org.hexworks.zircon.api.color.ANSITileColor;
 import org.hexworks.zircon.api.component.*;
 import org.hexworks.zircon.api.data.Position;
-import org.hexworks.zircon.api.data.Tile;
 import org.hexworks.zircon.api.graphics.BoxType;
-import org.hexworks.zircon.api.graphics.TileGraphics;
 import org.hexworks.zircon.api.grid.TileGrid;
 import org.hexworks.zircon.api.screen.Screen;
 import org.hexworks.zircon.api.uievent.ComponentEventType;
 import org.hexworks.zircon.api.uievent.UIEventResponse;
 
-import static javax.swing.event.HyperlinkEvent.EventType.ACTIVATED;
 import static org.hexworks.zircon.api.ComponentDecorations.box;
 import static org.hexworks.zircon.api.ComponentDecorations.shadow;
 
@@ -26,7 +21,7 @@ public class Main {
         String response;
         List<String> questions = new ArrayList<>();
         questions.add("int var = 0;");
-        questions.add("String var = \"hello world\";");
+        questions.add("String var = \"hello\";");
         questions.add("boolean switch = false;");
         int currentQuestion = 0;
 
@@ -81,6 +76,7 @@ public class Main {
                 .build();
         final Label label = Components.label()
                 .withText(questions.get(0))
+                .withSize(25,1)
                 .withPosition(30,0)
                 .build();
 
@@ -89,7 +85,6 @@ public class Main {
         panel.addComponent(header);
         panel.addComponent(start);
         panel.addComponent(submit);
-        screen.addComponent(label);
         //panel.addComponent(textInput);
 
 
@@ -98,15 +93,25 @@ public class Main {
             screen.addComponent(textInput);
             return UIEventResponse.processed();
         });
-        //for(final int[] i = {0}; i[0] < questions.size();) {
-            submit.handleComponentEvents(ComponentEventType.ACTIVATED, (event) -> {
-                if (textInput.getText().equals(questions.get(0))) {
-                    System.out.println("correct");
-                    panel.setTheme(ColorThemes.capturedByPirates());
-                }
-                return UIEventResponse.processed();
-            });
-        //}
+        submit.handleComponentEvents(ComponentEventType.ACTIVATED, (event) -> {
+            if (textInput.getText().equals(questions.get(0))) {
+                System.out.println("correct");
+                panel.setTheme(ColorThemes.capturedByPirates());
+                label.setText(questions.get(1));
+            }
+            else if(textInput.getText().equals(questions.get(1))){
+                System.out.println("correct");
+                panel.setTheme(ColorThemes.monokaiBlue());
+                label.setText(questions.get(2));
+            }
+            else if(textInput.getText().equals(questions.get(2))){
+                System.out.println("correct");
+                panel.setTheme(ColorThemes.afterglow());
+                label.setText("YOU WIN!!!!");
+            }
+            return UIEventResponse.processed();
+        });
+        screen.addComponent(label);
         screen.addComponent(panel);
 
 // we can apply color themes to a screen
