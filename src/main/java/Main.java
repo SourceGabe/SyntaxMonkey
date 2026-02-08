@@ -99,7 +99,7 @@ public class Main {
             return UIEventResponse.processed();
         });
         //for(final int[] i = {0}; i[0] < questions.size();) {
-            start.handleComponentEvents(ComponentEventType.ACTIVATED, (event) -> {
+            submit.handleComponentEvents(ComponentEventType.ACTIVATED, (event) -> {
                 if (textInput.getText().equals(questions.get(0))) {
                     System.out.println("correct");
                     panel.setTheme(ColorThemes.capturedByPirates());
