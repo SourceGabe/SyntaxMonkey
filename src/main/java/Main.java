@@ -23,9 +23,16 @@ import static org.hexworks.zircon.api.ComponentDecorations.shadow;
 public class Main {
     public static void main(String[] args) {
 
+        String response;
+        List<String> questions = new ArrayList<>();
+        questions.add("int var = 0;");
+        questions.add("String var = \"hello world\";");
+        questions.add("boolean switch = false;");
+        int currentQuestion = 0;
+
         final TileGrid tileGrid = SwingApplications.startTileGrid(
                 AppConfig.newBuilder()
-                        .withSize(34, 18)
+                        .withSize(60, 30)
                         .withDefaultTileset(CP437TilesetResources.aduDhabi16x16())
                         .build());
         final Screen screen = Screen.create(tileGrid);
@@ -50,7 +57,7 @@ public class Main {
                 // this will be 1x1 left and down from the top left
                 // corner of the panel
                 .withSize(25,1)
-                .withPosition(0, 0)
+                .withPosition(Position.create(3, -2).relativeToBottomOf(header))
                 .build();
 
         final CheckBox checkBox = Components.checkBox()
@@ -67,26 +74,43 @@ public class Main {
                         .relativeToBottomOf(checkBox))
                 .withText("start")
                 .build();
+        final Button submit = Components.button()
+                .withPosition(Position.create(0, -1) // this means 1 row below the check box
+                        .relativeToBottomOf(checkBox))
+                .withText("submit")
+                .build();
+        final Label label = Components.label()
+                .withText(questions.get(0))
+                .withPosition(30,0)
+                .build();
 
 
 
         panel.addComponent(header);
         panel.addComponent(start);
+        panel.addComponent(submit);
+        screen.addComponent(label);
         //panel.addComponent(textInput);
 
 
         start.handleComponentEvents(ComponentEventType.ACTIVATED, (event) -> {
-            panel.setTheme(ColorThemes.capturedByPirates());
+            //panel.setTheme(ColorThemes.capturedByPirates());
             screen.addComponent(textInput);
             return UIEventResponse.processed();
         });
-
+        //for(final int[] i = {0}; i[0] < questions.size();) {
+            start.handleComponentEvents(ComponentEventType.ACTIVATED, (event) -> {
+                if (textInput.getText().equals(questions.get(0))) {
+                    System.out.println("correct");
+                    panel.setTheme(ColorThemes.capturedByPirates());
+                }
+                return UIEventResponse.processed();
+            });
+        //}
         screen.addComponent(panel);
 
 // we can apply color themes to a screen
         screen.setTheme(ColorThemes.monokaiBlue());
-
-// this is how you can define interactions with a component
 
 
 // in order to see the changes you need to display your screen.
